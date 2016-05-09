@@ -149,3 +149,66 @@ require get_template_directory() . '/inc/customizer.php';
  * Load Jetpack compatibility file.
  */
 require get_template_directory() . '/inc/jetpack.php';
+
+/**
+ * [Sökruta som används på startsidan]
+ * @param  [type] $form [description]
+ * @return [type]       [description]
+ */
+function wpbsearchform( $form ) {
+
+    $form = '<div id="employer_search" class="widget widget_search"><form role="search" method="get" action="' . home_url( '/' ) . '" >
+    <div><label class="screen-reader-text" for="s">' . __('Search for:') . '</label>
+    <input type="text" class="search-field" placeholder="Sök arbetsgivare..." value="' . get_search_query() . '" name="s" id="s" />
+    <input type="submit" id="employer_searchsubmit" value="'. esc_attr__('Search') .'" />
+    </div>
+    </form>
+    </div>';
+
+    return $form;
+}
+
+add_shortcode('wpbsearch', 'wpbsearchform');
+
+/**
+ * Disable admin bar on the frontend of your website
+ * for user role subscriber.
+ */
+function fh_disable_admin_bar() {
+    if(current_user_can('subscriber') ){
+        add_filter('show_admin_bar', '__return_false');
+    }
+}
+add_action( 'after_setup_theme', 'fh_disable_admin_bar' );
+
+/**
+*Add menu items for custom taxonomies
+*
+*/
+add_filter( 'wp_nav_menu_items', 'add_taxonomies_links', 10, 2 );
+
+function add_taxonomies_links( $items, $args ) {
+    if( $args->theme_location == 'top')  {
+        $taxonomies = ['bransch', 'region'];            //Add all taxonomies you want to make a menu item of
+
+        foreach ($taxonomies as $tax) {
+            if (taxonomy_exists($tax)) {
+                $items .='<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#">'.$tax.'er</a>';
+                $items .='<ul class="sub-menu">';
+                $terms = get_terms( $tax, array('hide_empty' => false) );
+
+                foreach ($terms as $item) {
+                    $link = get_term_link($item);        //get link to archive of term
+                    $name = $item->name;
+
+                    $items .='<li class="menu-item menu-item-type-taxonomy"><a href="'. $link .'">'.$name.'</a></li>';
+
+                }
+                $items .='</ul>';
+                $items .='</li>';
+            }
+        }
+    }
+
+    return $items;
+}
