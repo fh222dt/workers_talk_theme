@@ -32,6 +32,23 @@
 		endif; ?>
 	</header>
 	<div class="entry-content">
+
+        <div id="employer-area" class="clearfix" >
+			<h5>Om arbetsgivaren</h5>
+			<div id="employer-about">
+				<p>Mer om oss</p>
+				<p class="content-disclaimer">Denna information har arbetsgivaren själv lämnat</p>
+			</div>
+			<div class="employer-fields" id="employer-www">
+				<p>Webb</p>
+				<a href="http://<?php the_field('webbadress'); ?>"><?php the_field('webbadress'); ?></a>
+			</div>
+			<div class="employer-fields" id="boss">
+				<p>Högsta chef</p>
+				<p><?php the_field('hogsta_chef'); ?></p>
+			</div>		<!-- hur hantera tomma??? -->
+		</div>
+
 		<?php
 			the_content( sprintf(
 				/* translators: %s: Name of current post. */
