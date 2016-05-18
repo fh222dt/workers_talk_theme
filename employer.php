@@ -1,11 +1,18 @@
 <?php
+/*
+Single Post Template: [Arbetsgivare]
+Description: This part is optional, but helpful for describing the Post Template
+*/
+?>
+
+
+<?php
 /**
  * The Template for displaying all single posts.
  *
  * @package Edin
  */
 
-//acf_form_head();
 get_header(); ?>
 
 	<div class="content-wrapper clear">
@@ -15,21 +22,7 @@ get_header(); ?>
 
 				<?php while ( have_posts() ) : the_post(); ?>
 
-					<?php
-					$postid = get_the_ID();
-
-					if (current_user_can('edit_post', $postid ) ){
-
-						// acf_form(array(
-						// 	'field_groups' => array(91),
-						// 	'submit_value'	=> 'Spara'
-						// ));
-					}
-
-					?>
-
-
-					<?php get_template_part( 'content', get_post_type( $post ) ); ?>
+					<?php get_template_part( 'content', 'single' ); ?>
 
 					<?php edin_post_nav(); ?>
 
