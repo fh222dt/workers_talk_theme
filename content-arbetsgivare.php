@@ -3,11 +3,32 @@
  * @package Edin
  */
 ?>
+<!-- Modal -->
+<div class="modal fade" id="br-bad-review" tabindex="-1" role="dialog" aria-labelledby="br-bad-reviewLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Anmäl för granskning</h4>
+      </div>
+      <div class="modal-body">
+        <p>Vill du anmäla den här recensionen för olämpligt innehåll?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="br-confirm-bad-review" type="button" class="btn btn-default" data-dismiss="modal">Nej</button>
+        <button type="button" class="btn btn-primary">Ja</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
-		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-		<div id="review-result">***</div>
+		<?php the_title( '<h1 class="entry-title">', '</h1>' );
+              $id = get_the_ID();
+              $score = Buildable_reviews_admin::get_total_score_of_object($id);
+        ?>
+		<div id="review-result"><?php echo $score ?></div>
 	</header><!-- .entry-header -->
 
 	<?php edin_post_thumbnail(); ?>
@@ -42,74 +63,80 @@
 		</div>
 
 		<div class="clearfix">
-			<div class="links"><a class="button-minimal" href="#">Recensera</a></div>
-			<div class="links"><a class="button-minimal" href="#">Se alla</a></div>
-			<div class="links"><a class="button-minimal" href="#">Sammanfattning</a></div>
+			<div id="br-review-button" class="links"><a class="button-minimal" href="#">Recensera</a></div>
+			<div id="br-view-all-button" class="links"><a class="button-minimal" href="#">Se alla</a></div>
+			<div id="br-summary-button" class="links"><a class="button-minimal" href="#">Sammanfattning</a></div>
 		</div>
 
-		<div id="review-form">
-			Formulär
+        <div id="employer-area" class="clearfix" >
+            <h5>Om arbetsgivaren</h5>
+            <p class="content-disclaimer">Denna information har arbetsgivaren själv lämnat</p>
+            <div class="row">
+                <div class="employer-fields col-md-6">
+                    <?php $url = get_post_meta(get_the_ID(), 'webbadress', true) ?>
+                    <p>Hemsida: <a href="<?php echo esc_url($url); ?>"><?php echo esc_url($url); ?></a> </p>
+                </div>
+                <div class="employer-fields col-md-6">
+                    <?php $boss = get_post_meta(get_the_ID(), 'hogsta_chef', true) ?>
+                    <p>Högsta chef: <?php echo esc_attr($boss); ?></p>
+                </div>
+                <!-- <div class="employer-fields col-md-4">
+                    <h6>Förmåner</h6>
+                    <?php //get_template_part( 'partials/employer', 'benefits' ); ?>
+                </div> -->
+                <!-- <div class="employer-fields col-md-4">
+                    <h6>Bilder</h6>
+                    <div class="css-gallery autoplay items-3">
+                        <div id="item-1" class="control-operator"></div>
+                            <div id="item-2" class="control-operator"></div>
+                            <div id="item-3" class="control-operator"></div>
+
+                            <figure class="item">
+                              <h1>Item 1</h1>
+                            </figure>
+
+                            <figure class="item">
+                              <h1>Item 2</h1>
+                            </figure>
+
+                            <figure class="item">
+                              <h1>Item 3</h1>
+                            </figure>
+
+                            <div class="controls">
+                              <a href="#item-1" class="control-button">•</a>
+                              <a href="#item-2" class="control-button">•</a>
+                              <a href="#item-3" class="control-button">•</a>
+                            </div>
+                      </div>
+                </div> -->
+            </div>
+
+        </div>
+
+		<div id="review-form" style="display: none">
+			<?php echo BR_public_display_form::br_review_form(); ?>
 		</div>
 
-		<div id="list-all-reviews">
-			Alla recensioner
+		<div id="list-all-reviews" style="display: none">
+			<?php echo BR_public_display_result::br_review_object_list(); ?>
 		</div>
 
-		<div id="review-summary">
-			Sammanfattning
-		</div>
+		<div id="review-summary" style="display: none">
+            <?php echo BR_public_display_result::br_review_object_summary(); ?>
+        </div>
 
-		<div id="employer-area" class="clearfix" >
-			<h5>Om arbetsgivaren</h5>
-			<p class="content-disclaimer">Denna information har arbetsgivaren själv lämnat</p>	
-			<div class="row">
-				<div class="employer-fields col-md-4">
-					<p>Webb</p>
-					<p>Högsta chef</p>
-				</div>
-				<div class="employer-fields col-md-4">					
-					<h6>Förmåner</h6>
-					<?php get_template_part( 'partials/employer', 'benefits' ); ?>
-				</div>
-				<div class="employer-fields col-md-4">
-					<h6>Bilder</h6>					
-					<div class="css-gallery autoplay items-3">
-					    <div id="item-1" class="control-operator"></div>
-						    <div id="item-2" class="control-operator"></div>
-						    <div id="item-3" class="control-operator"></div>
 
-						    <figure class="item">
-						      <h1>Item 1</h1>
-						    </figure>
 
-						    <figure class="item">
-						      <h1>Item 2</h1>
-						    </figure>
-
-						    <figure class="item">
-						      <h1>Item 3</h1>
-						    </figure>
-
-						    <div class="controls">
-						      <a href="#item-1" class="control-button">•</a>
-						      <a href="#item-2" class="control-button">•</a>
-						      <a href="#item-3" class="control-button">•</a>
-					    	</div>
-					  </div>
-				</div>
-			</div>
-
-		</div>
-		
 		<?php
-			//the_content();
+			the_content();
 
-			wp_link_pages( array(
-				'before'      => '<div class="page-links">' . __( 'Pages:', 'edin' ),
-				'after'       => '</div>',
-				'link_before' => '<span>',
-				'link_after'  => '</span>',
-			) );
+			// wp_link_pages( array(
+			// 	'before'      => '<div class="page-links">' . __( 'Pages:', 'edin' ),
+			// 	'after'       => '</div>',
+			// 	'link_before' => '<span>',
+			// 	'link_after'  => '</span>',
+			// ) );
 		?>
 	</div><!-- .entry-content -->
 
