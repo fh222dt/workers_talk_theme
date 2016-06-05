@@ -4,7 +4,7 @@
  */
 ?>
 <!-- Modal -->
-<div class="modal fade" id="br-bad-review" tabindex="-1" role="dialog" aria-labelledby="br-bad-reviewLabel">
+<div class="modal fade" id="br-report-review-modal" tabindex="-1" role="dialog" aria-labelledby="br-report-review-modalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -15,8 +15,8 @@
         <p>Vill du anmäla den här recensionen för olämpligt innehåll?</p>
       </div>
       <div class="modal-footer">
-        <button id="br-confirm-bad-review" type="button" class="btn btn-default" data-dismiss="modal">Nej</button>
-        <button type="button" class="btn btn-primary">Ja</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Nej</button>
+        <button id="br-confirm-report-review" type="button" class="btn btn-primary">Ja</button>
       </div>
     </div>
   </div>
@@ -24,11 +24,13 @@
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
-		<?php the_title( '<h1 class="entry-title">', '</h1>' );
-              $id = get_the_ID();
-              $score = Buildable_reviews_admin::get_total_score_of_object($id);
+		<?php
+            $id = get_the_ID();
+            $score = Buildable_reviews_admin::get_total_score_of_object($id);
+            the_title( '<h1 class="entry-title">', '</h1><span class="score-icons" data-score="'.$score.'"></span>' );
+
         ?>
-		<div id="review-result"><?php echo $score ?></div>
+		<div id="review-result"></div>
 	</header><!-- .entry-header -->
 
 	<?php edin_post_thumbnail(); ?>
